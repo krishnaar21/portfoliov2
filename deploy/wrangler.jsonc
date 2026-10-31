@@ -1,0 +1,7 @@
+{"name":"krishnaar","main":"_worker.js","compatibility_date":"2025-07-18",
+ "account_id":"a24d039d3e58d9f7e382beacecfb41d9",
+ "assets":{"directory":".","binding":"ASSETS","run_worker_first":true},
+ "kv_namespaces":[{"binding":"LOVES","id":"cfac8c806d2940d6bf6548501012538c"}],
+ "vars":{"CONTACT_TO":"krishnaar.work@gmail.com","CONTACT_FROM":"krishnaar.work <contact@krishnaar.work>"},
+ "workers_dev":true,
+ "routes":[{"pattern":"krishnaar.work","custom_domain":true},{"pattern":"www.krishnaar.work","custom_domain":true}]}
