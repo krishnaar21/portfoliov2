@@ -6,7 +6,8 @@ These run against `site/index.html` and are idempotent. Apply them in this order
 2. `trugen/build.py`: TruGen AI case study and card
 3. `thumbs-dark/build.py`: dark-mode card thumbnails, plus light overrides for BookJoy
 4. `polish-1031/build.py`: keeps the dotted side rails visible behind the sticky top bar
-5. `siri-globe/build.py`: replaces the hero/profile ⌘ with a turning halftone Earth in Siri colours + the site's yellow (writes images/earth-siri.webp)
+5. `cmd-siri/build.py`: the hero/profile ⌘ filled with flowing Siri colours + the site's yellow, with a soft glow (Krishna's pick)
+   Earlier explorations, not applied: `siri-globe/build.py`: replaces the hero/profile ⌘ with a turning halftone Earth in Siri colours + the site's yellow (writes images/earth-siri.webp)
    Alternative (don't apply both): `cmd-fill/build.py`: animated orange/violet silk fill inside the hero and profile ⌘ logo (WebGL, CSS-mask fallback)
 
 Usage: `python3 <script> site/index.html`. The thumbnail generators (`*/thumbs/*.py`, `thumbs-dark/make.py`, `bookjoy-thumbs/options.py`) were written against the original project-files layout and need the source screens and fonts, which aren't in this repo.
