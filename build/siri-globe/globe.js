@@ -44,7 +44,7 @@ void main(){
   gl.texImage2D(gl.TEXTURE_2D,0,gl.LUMINANCE,gl.LUMINANCE,gl.UNSIGNED_BYTE,im);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);ready=true;size();kick()};
- im.src=o.src;
+ im.onerror=()=>cv.classList.add("nogl");im.src=o.src;
  function size(){const d=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(cv.clientWidth*d));if(cv.width!==w){cv.width=cv.height=w;gl.viewport(0,0,w,w)}
   gl.uniform2f(U.res,w,w);gl.uniform1f(U.cs,Math.max(Math.round(2.5*d),Math.round(w/(o.cells||96))))}
  function theme(){const m=getComputedStyle(cv).color.match(/[\d.]+/g);const k=m?(.3*m[0]+.59*m[1]+.11*m[2])/255:1;gl.uniform1f(U.ink,k<.5?1:0)}
