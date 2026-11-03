@@ -7,14 +7,18 @@ window.sgGlobe=(cv,o={})=>{
  const RM=matchMedia("(prefers-reduced-motion: reduce)"),gl=cv.getContext("webgl",{premultipliedAlpha:true,alpha:true,antialias:false});
  if(!gl){cv.classList.add("nogl");return}
  const FS=`precision highp float;uniform float t,cs,ink;uniform vec2 res;uniform sampler2D map;
-const float PI=3.14159265;const float R=${(o.r||.86).toFixed(3)};
+const float PI=3.14159265;const float R=${(o.r||.78).toFixed(3)};
 vec3 siri(vec2 p,float t){
- float a=atan(p.y,p.x)/(2.*PI)+.5;
- float f=fract(a+t*.045+.18*sin(t*.35+p.y*2.4)+.12*sin(t*.27+p.x*3.1));
- vec3 c0=vec3(1.,.33,.62),c1=vec3(.66,.36,1.),c2=vec3(.25,.52,1.),c3=vec3(.22,.85,1.),c4=vec3(1.,.58,.32);
- float x=f*5.;vec3 c=mix(c0,c1,smoothstep(0.,1.,x));
- c=mix(c,c2,smoothstep(1.,2.,x));c=mix(c,c3,smoothstep(2.,3.,x));c=mix(c,c4,smoothstep(3.,4.,x));c=mix(c,c0,smoothstep(4.,5.,x));
- return c;}
+ vec2 q=p+.28*vec2(sin(p.y*2.3+t*.7),cos(p.x*2.1-t*.6));
+ q+=.16*vec2(sin(q.y*3.7-t*.9),cos(q.x*3.3+t*.8));
+ vec3 C[5];C[0]=vec3(1.,.18,.56);C[1]=vec3(.62,.25,1.);C[2]=vec3(.12,.45,1.);C[3]=vec3(.1,.9,1.);C[4]=vec3(1.,.55,.15);
+ vec3 acc=vec3(0.);float w=0.;
+ for(int i=0;i<5;i++){float f=float(i);
+  vec2 c=.75*vec2(sin(t*(.31+.07*f)+f*1.7),cos(t*(.27+.05*f)+f*2.9));
+  float k=1./(.06+pow(length(q-c),2.2));acc+=C[i]*k;w+=k;}
+ vec3 col=acc/w;
+ float m=max(col.r,max(col.g,col.b));col=mix(vec3(dot(col,vec3(.3333))),col,1.35)/max(m,.001);
+ return clamp(col,0.,1.);}
 float lum(vec2 q){
  float r2=dot(q,q);if(r2>1.)return -1.;
  float z=sqrt(1.-r2);float tl=.38;
@@ -26,12 +30,13 @@ void main(){
  vec2 fc=gl_FragCoord.xy,c=(floor(fc/cs)+.5)*cs;
  vec2 p=(c/res*2.-1.)/R,pf=(fc/res*2.-1.)/R;
  float L=lum(p);vec3 col=siri(pf,t);
- float a=0.;
- if(L>=0.){float v=mix(L,pow(1.-L*.97,1.7),ink),d=length(fc-c)/cs,rad=mix(.56,.5,ink)*sqrt(v)+.04;col=mix(col,col*col*.9,ink*.35);a=1.-smoothstep(rad-1.2/cs,rad,d);}
+ float a=0.,halo=0.;
+ if(L>=0.){float v=mix(L,pow(1.-L*.97,1.7),ink),d=length(fc-c)/cs,rad=mix(.56,.5,ink)*sqrt(v)+.04;col=mix(col,col*col*.9,ink*.35);a=1.-smoothstep(rad-1.2/cs,rad,d);halo=(1.-ink*.7)*.35*v*exp(-max(d-rad,0.)*6.);}
  float r=length(pf);
- float glow=smoothstep(1.09,1.,r)*smoothstep(.96,1.,r)*${(o.glow??.4).toFixed(3)};
- vec3 gc=siri(pf,t+2.);
- vec3 o=col*a+gc*glow*(1.-a);float A=a+glow*(1.-a);
+ float ga=atan(pf.y,pf.x);float wob=.035*sin(ga*3.+t*1.3)+.025*sin(ga*5.-t*1.7);
+ float glow=(exp(-max(r-1.,0.)*(9.-60.*wob))*smoothstep(.9,1.,r)*smoothstep(1.27,1.06,r))*${(o.glow??.75).toFixed(3)}*(.8+.2*sin(ga*2.-t));
+ vec3 gc=siri(pf*1.05,t+1.);float hl=halo*(1.-a);
+ vec3 o=col*a+col*hl+gc*glow*(1.-a-hl);float A=clamp(a+hl+glow*(1.-a-hl),0.,1.);
  gl_FragColor=vec4(o,A);}`;
  const sh=(ty,s)=>{const x=gl.createShader(ty);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))console.warn(gl.getShaderInfoLog(x));return x};
  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,"attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}"));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
