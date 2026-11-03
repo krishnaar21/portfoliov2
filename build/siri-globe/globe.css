@@ -1,0 +1,4 @@
+.cmk.sgon{margin-left:0}
+.cmk.sgon>svg{display:none}
+.cmk .sgc{position:absolute;left:50%;top:50%;width:128%;height:128%;transform:translate(-50%,-50%);display:block;pointer-events:none;color:var(--fg)}
+.cmk .sgc.nogl{width:78%;height:78%;border-radius:50%;background:conic-gradient(from 90deg,#ff2e8f,#a040ff,#1f73ff,#19e6ff,var(--ac),#ff2e8f)}
